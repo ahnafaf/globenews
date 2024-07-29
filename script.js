@@ -9,10 +9,14 @@ let markers = [];
 let lines;
 
 const locations = [
-    { name: "Location 1", lat: 37.0902, lon: -95.7129 },
-    { name: "Location 2", lat: -14.2350, lon: -51.9253 },
-    { name: "Location 3", lat: 61.5240, lon: 105.3188 }
+    { name: "United States (Washington D.C.)", lat: 38.8951, lon: -77.0364 },
+    { name: "Canada (Ottawa)", lat: 45.4215, lon: -75.6972 },
+    { name: "UAE (Dubai)", lat: 25.2048, lon: 55.2708 },
+    { name: "Bangladesh (Dhaka)", lat: 23.8103, lon: 90.4125 },
+    { name: "Australia (Canberra)", lat: -35.2809, lon: 149.1300 },
+    { name: "United Kingdom (London)", lat: 51.5074, lon: -0.1278 }
 ];
+
 
 function init() {
     console.log("Initializing...");
