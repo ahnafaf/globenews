@@ -29,11 +29,21 @@
             top: 10px;
             right: 10px;
         }
+        #hover-info {
+            position: absolute;
+            color: black;
+            background-color: rgba(255, 255, 255, 0.7);
+            padding: 5px;
+            border-radius: 5px;
+            display: none;
+            pointer-events: none;
+        }
     </style>
 </head>
 <body>
     <div id="info" class="draggable"></div>
     <div id="debugPanel" class="draggable"></div>
+    <div id="hover-info"></div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/gsap.min.js"></script>
