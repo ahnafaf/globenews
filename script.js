@@ -5,7 +5,6 @@ let maxZoom = 2;
 let currentZoom = 1.5;
 let isDragging = false;
 let previousMousePosition = { x: 0, y: 0 };
-let raycaster, mouse;
 let markers = [];
 let lines;
 
@@ -51,9 +50,6 @@ function init() {
     light.position.set(5, 3, 5);
     scene.add(light);
     scene.add(new THREE.AmbientLight(0x333333));
-
-    raycaster = new THREE.Raycaster();
-    mouse = new THREE.Vector2();
 
     window.addEventListener('resize', onWindowResize, false);
     renderer.domElement.addEventListener('mousedown', onMouseDown, false);
@@ -114,17 +110,6 @@ function onMouseDown(event) {
 }
 
 function onMouseMove(event) {
-    mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
-    mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
-
-    raycaster.setFromCamera(mouse, camera);
-    const intersects = raycaster.intersectObject(triangulationSphere);
-
-    if (intersects.length > 0) {
-        markers[0].position.copy(intersects[0].point);
-        updateLines();
-    }
-
     if (isDragging && earthMesh) {
         const deltaMove = {
             x: event.clientX - previousMousePosition.x,
@@ -142,11 +127,6 @@ function onMouseMove(event) {
             y: event.clientY
         };
     }
-}
-
-function updateLines() {
-    lines.geometry.setFromPoints(markers.map(m => m.position));
-    lines.geometry.attributes.position.needsUpdate = true;
 }
 
 function onMouseUp() {
@@ -189,7 +169,8 @@ function updateInfoPanel() {
         infoPanel.innerHTML = `
             <h2>Triangulation Info</h2>
             ${markers.map((marker, index) => `
-                <p>Location ${index + 1}: ${index === 0 ? 'Moving' : locations[index].name}</p>
+                <p>Location ${index + 1}: ${locations[index].name}</p>
+                <p>Lat: ${locations[index].lat.toFixed(4)}, Lon: ${locations[index].lon.toFixed(4)}</p>
                 <p>X: ${marker.position.x.toFixed(4)}, Y: ${marker.position.y.toFixed(4)}, Z: ${marker.position.z.toFixed(4)}</p>
             `).join('')}
         `;
