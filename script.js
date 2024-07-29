@@ -10,11 +10,15 @@ let lines;
 
 const locations = [
     { name: "United States (Washington D.C.)", lat: 38.8951, lon: -77.0364 },
-    { name: "Canada (Ottawa)", lat: 45.4215, lon: -75.6972 },
-    { name: "UAE (Dubai)", lat: 25.2048, lon: 55.2708 },
-    { name: "Bangladesh (Dhaka)", lat: 23.8103, lon: 90.4125 },
-    { name: "Australia (Canberra)", lat: -35.2809, lon: 149.1300 },
-    { name: "United Kingdom (London)", lat: 51.5074, lon: -0.1278 }
+    { name: "China (Beijing)", lat: 39.9042, lon: 116.4074 },
+    { name: "Russia (Moscow)", lat: 55.7558, lon: 37.6173 },
+    { name: "Germany (Berlin)", lat: 52.5200, lon: 13.4050 },
+    { name: "Japan (Tokyo)", lat: 35.6762, lon: 139.6503 },
+    { name: "India (New Delhi)", lat: 28.6139, lon: 77.2090 },
+    { name: "United Kingdom (London)", lat: 51.5074, lon: -0.1278 },
+    { name: "France (Paris)", lat: 48.8566, lon: 2.3522 },
+    { name: "Brazil (Brasília)", lat: -15.7801, lon: -47.9292 },
+    { name: "Canada (Ottawa)", lat: 45.4215, lon: -75.6972 }
 ];
 
 
