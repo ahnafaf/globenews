@@ -1,4 +1,4 @@
-let scene, camera, renderer, earthMesh, triangulationSphere;
+let scene, camera, renderer, earthMesh, triangulationSphere, raycaster, mouse;
 let currentCountryIndex = 0;
 let minZoom = 0.6;
 let maxZoom = 2;
@@ -10,13 +10,12 @@ let lines;
 
 const locations = [
     { name: "United States (Washington D.C.)", lat: 38.8951, lon: -77.0364 },
-    { name: "Canada (Ottawa)", lat: 45.4215, lon: -75.6972 },
+    { name: "Canada (Calgary)", lat: 45.4215, lon: -75.6972 },
     { name: "UAE (Dubai)", lat: 25.2048, lon: 55.2708 },
     { name: "Bangladesh (Dhaka)", lat: 23.8103, lon: 90.4125 },
     { name: "Australia (Canberra)", lat: -35.2809, lon: 149.1300 },
     { name: "United Kingdom (London)", lat: 51.5074, lon: -0.1278 }
 ];
-
 
 function init() {
     console.log("Initializing...");
@@ -29,7 +28,6 @@ function init() {
     renderer.setSize(window.innerWidth, window.innerHeight);
     document.body.appendChild(renderer.domElement);
 
-    // Load your Earth model
     const loader = new THREE.GLTFLoader();
     loader.load(
         './models/scene.gltf',
@@ -47,7 +45,6 @@ function init() {
         }
     );
 
-    // Create triangulation sphere
     createTriangulationSphere();
 
     const light = new THREE.DirectionalLight(0xffffff, 1);
@@ -55,10 +52,14 @@ function init() {
     scene.add(light);
     scene.add(new THREE.AmbientLight(0x333333));
 
+    raycaster = new THREE.Raycaster();
+    mouse = new THREE.Vector2();
+
     window.addEventListener('resize', onWindowResize, false);
     renderer.domElement.addEventListener('mousedown', onMouseDown, false);
     renderer.domElement.addEventListener('mousemove', onMouseMove, false);
     renderer.domElement.addEventListener('mouseup', onMouseUp, false);
+    renderer.domElement.addEventListener('click', onClick, false);
     window.addEventListener('keydown', onKeyDown, false);
 
     console.log("Initialization complete");
@@ -75,19 +76,18 @@ function createTriangulationSphere() {
     triangulationSphere = new THREE.Mesh(geometry, material);
     scene.add(triangulationSphere);
 
-    // Add location markers and lines
     const markerGeometry = new THREE.SphereGeometry(0.01, 16, 16);
     const markerMaterial = new THREE.MeshBasicMaterial({ color: 0xff0000 });
-    
+
     locations.forEach(loc => {
         const pos = latLonToVector3(loc.lat, loc.lon, 0.4);
         const marker = new THREE.Mesh(markerGeometry, markerMaterial);
         marker.position.copy(pos);
+        marker.userData = loc;
         triangulationSphere.add(marker);
         markers.push(marker);
     });
 
-    // Create lines between markers
     const lineMaterial = new THREE.LineBasicMaterial({ color: 0xffff00 });
     const lineGeometry = new THREE.BufferGeometry().setFromPoints(markers.map(m => m.position));
     lines = new THREE.Line(lineGeometry, lineMaterial);
@@ -178,6 +178,21 @@ function updateInfoPanel() {
                 <p>X: ${marker.position.x.toFixed(4)}, Y: ${marker.position.y.toFixed(4)}, Z: ${marker.position.z.toFixed(4)}</p>
             `).join('')}
         `;
+    }
+}
+
+function onClick(event) {
+    mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+    mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+
+    raycaster.setFromCamera(mouse, camera);
+    const intersects = raycaster.intersectObjects(markers);
+
+    if (intersects.length > 0) {
+        const intersectedMarker = intersects[0].object;
+        const location = intersectedMarker.userData;
+        updateInfoPanel(location);
+        console.log(`Clicked on marker for ${location.name}`);
     }
 }
 
