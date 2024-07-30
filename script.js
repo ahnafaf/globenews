@@ -87,8 +87,6 @@ function createTriangulationSphere() {
         triangulationSphere.add(marker);
         markers.push(marker);
     });
-
-    
 }
 
 function latLonToVector3(lat, lon, radius) {
@@ -161,33 +159,11 @@ function onWindowResize() {
 function animate() {
     requestAnimationFrame(animate);
     renderer.render(scene, camera);
-    updateInfoPanel();
-}
-
-function updateInfoPanel(location = null) {
-    const infoPanel = document.getElementById('info');
-    if (infoPanel) {
-        if (location) {
-            infoPanel.innerHTML = `
-                <h2>Location Info</h2>
-                <p>Name: ${location.name}</p>
-                <p>Latitude: ${location.lat}</p>
-                <p>Longitude: ${location.lon}</p>
-            `;
-        } else {
-            infoPanel.innerHTML = `
-                <h2>Triangulation Info</h2>
-                ${markers.map((marker, index) => `
-                    <p>Location ${index + 1}: ${locations[index].name}</p>
-                    <p>Lat: ${locations[index].lat.toFixed(4)}, Lon: ${locations[index].lon.toFixed(4)}</p>
-                    <p>X: ${marker.position.x.toFixed(4)}, Y: ${marker.position.y.toFixed(4)}, Z: ${marker.position.z.toFixed(4)}</p>
-                `).join('')}
-            `;
-        }
-    }
 }
 
 function onClick(event) {
+    event.preventDefault();
+
     mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
     mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
 
@@ -197,8 +173,9 @@ function onClick(event) {
     if (intersects.length > 0) {
         const intersectedMarker = intersects[0].object;
         const location = intersectedMarker.userData;
-        updateInfoPanel(location);
-        console.log(`Clicked on marker for ${location.name}`);
+        showPointMenu(location);
+    } else {
+        hidePointMenu();
     }
 }
 
@@ -209,22 +186,37 @@ function onDocumentMouseMove(event) {
     raycaster.setFromCamera(mouse, camera);
     const intersects = raycaster.intersectObjects(markers);
 
-    const hoverInfo = document.getElementById('hover-info');
-
     markers.forEach(marker => marker.scale.set(1, 1, 1)); // Reset marker scale
 
     if (intersects.length > 0) {
         const intersectedMarker = intersects[0].object;
-        const location = intersectedMarker.userData;
-        hoverInfo.style.display = 'block';
-        hoverInfo.style.left = event.clientX + 10 + 'px';
-        hoverInfo.style.top = event.clientY + 10 + 'px';
-        hoverInfo.innerHTML = location.name;
         intersectedMarker.scale.set(1.5, 1.5, 1.5); // Enlarge marker on hover
-    } else {
-        hoverInfo.style.display = 'none';
     }
 }
+
+function showPointMenu(location) {
+    const menu = document.getElementById('point-menu');
+    menu.innerHTML = `
+        <h2>${location.name}</h2>
+        <h3>${location.capital}</h3>
+        <p>Latitude: ${location.lat}</p>
+        <p>Longitude: ${location.lon}</p>
+        <h4>Latest News</h4>
+        <a href="#" class="news-link">News Headline 1</a>
+        <p class="news-subtext">Brief description of the news...</p>
+        <a href="#" class="news-link">News Headline 2</a>
+        <p class="news-subtext">Brief description of the news...</p>
+        <a href="#" class="news-link">News Headline 3</a>
+        <p class="news-subtext">Brief description of the news...</p>
+    `;
+    menu.style.display = 'block';
+}
+
+function hidePointMenu() {
+    const menu = document.getElementById('point-menu');
+    menu.style.display = 'none';
+}
+
 
 init();
 animate();
