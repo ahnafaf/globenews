@@ -1,3 +1,4 @@
+// Description: Main script for the 3D globe visualization.
 let scene, camera, renderer, earthMesh, triangulationSphere, raycaster, mouse;
 let currentCountryIndex = 0;
 let minZoom = 0.6;
@@ -7,6 +8,8 @@ let isDragging = false;
 let previousMousePosition = { x: 0, y: 0 };
 let markers = [];
 let lines;
+
+const apiToken = window.ENV.THENEWS_API_TOKEN;
 
 const locations = [
     { name: "United States (Washington D.C.)", lat: 38.8951, lon: -77.0364 },
@@ -87,8 +90,6 @@ function createTriangulationSphere() {
         triangulationSphere.add(marker);
         markers.push(marker);
     });
-
-    
 }
 
 function latLonToVector3(lat, lon, radius) {
@@ -161,33 +162,11 @@ function onWindowResize() {
 function animate() {
     requestAnimationFrame(animate);
     renderer.render(scene, camera);
-    updateInfoPanel();
-}
-
-function updateInfoPanel(location = null) {
-    const infoPanel = document.getElementById('info');
-    if (infoPanel) {
-        if (location) {
-            infoPanel.innerHTML = `
-                <h2>Location Info</h2>
-                <p>Name: ${location.name}</p>
-                <p>Latitude: ${location.lat}</p>
-                <p>Longitude: ${location.lon}</p>
-            `;
-        } else {
-            infoPanel.innerHTML = `
-                <h2>Triangulation Info</h2>
-                ${markers.map((marker, index) => `
-                    <p>Location ${index + 1}: ${locations[index].name}</p>
-                    <p>Lat: ${locations[index].lat.toFixed(4)}, Lon: ${locations[index].lon.toFixed(4)}</p>
-                    <p>X: ${marker.position.x.toFixed(4)}, Y: ${marker.position.y.toFixed(4)}, Z: ${marker.position.z.toFixed(4)}</p>
-                `).join('')}
-            `;
-        }
-    }
 }
 
 function onClick(event) {
+    event.preventDefault();
+
     mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
     mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
 
@@ -197,8 +176,9 @@ function onClick(event) {
     if (intersects.length > 0) {
         const intersectedMarker = intersects[0].object;
         const location = intersectedMarker.userData;
-        updateInfoPanel(location);
-        console.log(`Clicked on marker for ${location.name}`);
+        showPointMenu(location);
+    } else {
+        hidePointMenu();
     }
 }
 
@@ -209,22 +189,75 @@ function onDocumentMouseMove(event) {
     raycaster.setFromCamera(mouse, camera);
     const intersects = raycaster.intersectObjects(markers);
 
-    const hoverInfo = document.getElementById('hover-info');
-
     markers.forEach(marker => marker.scale.set(1, 1, 1)); // Reset marker scale
 
     if (intersects.length > 0) {
         const intersectedMarker = intersects[0].object;
-        const location = intersectedMarker.userData;
-        hoverInfo.style.display = 'block';
-        hoverInfo.style.left = event.clientX + 10 + 'px';
-        hoverInfo.style.top = event.clientY + 10 + 'px';
-        hoverInfo.innerHTML = location.name;
         intersectedMarker.scale.set(1.5, 1.5, 1.5); // Enlarge marker on hover
-    } else {
-        hoverInfo.style.display = 'none';
     }
 }
+
+async function showPointMenu(location) {
+    const menu = document.getElementById('point-menu');
+    
+    // Show loading state
+    menu.innerHTML = `
+        <h2>${location.name}</h2>
+        <h3>${location.capital}</h3>
+        <h4>Latest News</h4>
+        <p>Loading news...</p>
+    `;
+    menu.style.display = 'block';
+
+    var requestOptions = {
+        method: 'GET'
+    };
+
+    var params = {
+        api_token: apiToken,
+        categories: 'general,politics',
+        search: location.name,
+        limit: '5'
+    };
+
+    var esc = encodeURIComponent;
+    var query = Object.keys(params)
+        .map(function(k) {return esc(k) + '=' + esc(params[k]);})
+        .join('&');
+
+    try {
+        // Make API call
+        const response = await fetch("https://api.thenewsapi.com/v1/news/all?" + query, requestOptions);
+        const newsData = await response.json();
+
+        // Generate news HTML
+        const newsHTML = newsData.data.map(article => `
+            <div class="news-item">
+                <a href="${article.url}" class="news-link" target="_blank">${article.title}</a>
+                <p class="news-subtext">${article.description || 'No description available.'}</p>
+                <p class="news-meta">Published: ${new Date(article.published_at).toLocaleString()} | Source: ${article.source}</p>
+            </div>
+        `).join('');
+
+        // Update menu with fetched news
+        menu.innerHTML = `
+            <h2>${location.name}</h2>
+            <h3>${location.capital}</h3>
+            <h4>Latest News</h4>
+            ${newsHTML || '<p>No news available for this country at the moment.</p>'}
+        `;
+    } catch (error) {
+        console.error('Error fetching news:', error);
+        menu.innerHTML += '<p>Error loading news. Please try again later.</p>';
+    }
+}
+
+
+function hidePointMenu() {
+    const menu = document.getElementById('point-menu');
+    menu.style.display = 'none';
+}
+
 
 init();
 animate();

@@ -8,6 +8,7 @@
         body { 
             margin: 0; 
             background-color: #f0f0f0;
+            font-family: Arial, sans-serif;
         }
         canvas { 
             display: block; 
@@ -17,7 +18,6 @@
             color: white;
             background-color: rgba(0,0,0,0.7);
             padding: 10px;
-            font-family: Arial, sans-serif;
             touch-action: none;
             user-select: none;
         }
@@ -38,16 +38,41 @@
             display: none;
             pointer-events: none;
         }
+        #point-menu {
+            position: fixed;
+            width: 300px;
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 10px;
+            padding: 15px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            display: none;
+            z-index: 1000;
+        }
+        #point-menu h3 {
+            margin-top: 0;
+        }
+        #point-menu p {
+            margin-bottom: 5px;
+        }
+        #point-menu a {
+            color: #0066cc;
+            text-decoration: none;
+        }
+        #point-menu a:hover {
+            text-decoration: underline;
+        }
     </style>
 </head>
 <body>
     <div id="info" class="draggable"></div>
     <div id="debugPanel" class="draggable"></div>
     <div id="hover-info"></div>
+    <div id="point-menu" style="display: none; position: absolute; background: white; padding: 10px; border: 1px solid black;"></div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/gsap.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/interactjs/dist/interact.min.js"></script>
+    <script src="config.js"></script>
     <script src="script.js"></script>
 </body>
 </html>
