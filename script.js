@@ -1,3 +1,4 @@
+// Description: Main script for the 3D globe visualization.
 let scene, camera, renderer, earthMesh, triangulationSphere, raycaster, mouse;
 let currentCountryIndex = 0;
 let minZoom = 0.6;
@@ -7,6 +8,8 @@ let isDragging = false;
 let previousMousePosition = { x: 0, y: 0 };
 let markers = [];
 let lines;
+
+const apiToken = window.ENV.THENEWS_API_TOKEN;
 
 const locations = [
     { name: "United States (Washington D.C.)", lat: 38.8951, lon: -77.0364 },
@@ -194,23 +197,61 @@ function onDocumentMouseMove(event) {
     }
 }
 
-function showPointMenu(location) {
+async function showPointMenu(location) {
     const menu = document.getElementById('point-menu');
+    
+    // Show loading state
     menu.innerHTML = `
         <h2>${location.name}</h2>
         <h3>${location.capital}</h3>
-        <p>Latitude: ${location.lat}</p>
-        <p>Longitude: ${location.lon}</p>
         <h4>Latest News</h4>
-        <a href="#" class="news-link">News Headline 1</a>
-        <p class="news-subtext">Brief description of the news...</p>
-        <a href="#" class="news-link">News Headline 2</a>
-        <p class="news-subtext">Brief description of the news...</p>
-        <a href="#" class="news-link">News Headline 3</a>
-        <p class="news-subtext">Brief description of the news...</p>
+        <p>Loading news...</p>
     `;
     menu.style.display = 'block';
+
+    var requestOptions = {
+        method: 'GET'
+    };
+
+    var params = {
+        api_token: apiToken,
+        categories: 'general,politics',
+        search: location.name,
+        limit: '5'
+    };
+
+    var esc = encodeURIComponent;
+    var query = Object.keys(params)
+        .map(function(k) {return esc(k) + '=' + esc(params[k]);})
+        .join('&');
+
+    try {
+        // Make API call
+        const response = await fetch("https://api.thenewsapi.com/v1/news/all?" + query, requestOptions);
+        const newsData = await response.json();
+
+        // Generate news HTML
+        const newsHTML = newsData.data.map(article => `
+            <div class="news-item">
+                <a href="${article.url}" class="news-link" target="_blank">${article.title}</a>
+                <p class="news-subtext">${article.description || 'No description available.'}</p>
+                <p class="news-meta">Published: ${new Date(article.published_at).toLocaleString()} | Source: ${article.source}</p>
+            </div>
+        `).join('');
+
+        // Update menu with fetched news
+        menu.innerHTML = `
+            <h2>${location.name}</h2>
+            <h3>${location.capital}</h3>
+            <h4>Latest News</h4>
+            ${newsHTML || '<p>No news available for this country at the moment.</p>'}
+        `;
+    } catch (error) {
+        console.error('Error fetching news:', error);
+        menu.innerHTML += '<p>Error loading news. Please try again later.</p>';
+    }
 }
+
 
 function hidePointMenu() {
     const menu = document.getElementById('point-menu');
