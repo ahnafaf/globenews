@@ -50,7 +50,7 @@ function init() {
     const light = new THREE.DirectionalLight(0xffffff, 1);
     light.position.set(5, 3, 5);
     scene.add(light);
-    scene.add(new THREE.AmbientLight(0x444444));
+    scene.add(new THREE.AmbientLight(0x888888));
 
     raycaster = new THREE.Raycaster();
     mouse = new THREE.Vector2();
