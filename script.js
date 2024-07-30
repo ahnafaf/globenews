@@ -10,7 +10,7 @@ let lines;
 
 const locations = [
     { name: "United States (Washington D.C.)", lat: 38.8951, lon: -77.0364 },
-    { name: "Canada (Calgary)", lat: 45.4215, lon: -75.6972 },
+    { name: "Canada (Ottawa)", lat: 45.4215, lon: -75.6972 },
     { name: "UAE (Dubai)", lat: 25.2048, lon: 55.2708 },
     { name: "Bangladesh (Dhaka)", lat: 23.8103, lon: 90.4125 },
     { name: "Australia (Canberra)", lat: -35.2809, lon: 149.1300 },
@@ -50,7 +50,7 @@ function init() {
     const light = new THREE.DirectionalLight(0xffffff, 1);
     light.position.set(5, 3, 5);
     scene.add(light);
-    scene.add(new THREE.AmbientLight(0x333333));
+    scene.add(new THREE.AmbientLight(0x444444));
 
     raycaster = new THREE.Raycaster();
     mouse = new THREE.Vector2();
@@ -69,10 +69,9 @@ function init() {
 function createTriangulationSphere() {
     const geometry = new THREE.SphereGeometry(0.4, 32, 32);
     const material = new THREE.MeshBasicMaterial({
-        color: 0x00ff00,
-        wireframe: true,
-        transparent: true,
-        opacity: 0.5
+        color: 0x000000,
+        visible: false,
+        opacity: 0
     });
     triangulationSphere = new THREE.Mesh(geometry, material);
     scene.add(triangulationSphere);
@@ -89,10 +88,7 @@ function createTriangulationSphere() {
         markers.push(marker);
     });
 
-    const lineMaterial = new THREE.LineBasicMaterial({ color: 0xffff00 });
-    const lineGeometry = new THREE.BufferGeometry().setFromPoints(markers.map(m => m.position));
-    lines = new THREE.Line(lineGeometry, lineMaterial);
-    triangulationSphere.add(lines);
+    
 }
 
 function latLonToVector3(lat, lon, radius) {
