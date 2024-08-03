@@ -12,13 +12,27 @@ let lines;
 const apiToken = window.ENV.THENEWS_API_TOKEN;
 
 const locations = [
-    { name: "United States (Washington D.C.)", lat: 38.8951, lon: -77.0364 },
-    { name: "Canada (Ottawa)", lat: 45.4215, lon: -75.6972 },
-    { name: "UAE (Dubai)", lat: 25.2048, lon: 55.2708 },
-    { name: "Bangladesh (Dhaka)", lat: 23.8103, lon: 90.4125 },
-    { name: "Australia (Canberra)", lat: -35.2809, lon: 149.1300 },
-    { name: "United Kingdom (London)", lat: 51.5074, lon: -0.1278 }
+    { name: "United States", lat: 38.8951, lon: -77.0369 },
+    { name: "Canada", lat: 45.4215, lon: -75.6981 },
+    { name: "United Arab Emirates", lat: 25.276987, lon: 55.296249 },
+    { name: "Bangladesh", lat: 23.685, lon: 90.3563 },
+    { name: "Australia", lat: -35.3081, lon: 149.1245 },
+    { name: "United Kingdom", lat: 51.5074, lon: -0.1278 },
+    { name: "China", lat: 39.9042, lon: 116.4074 },
+    { name: "Brazil", lat: -15.8267, lon: -47.9218 },
+    { name: "India", lat: 28.6139, lon: 77.209 },
+    { name: "Russia", lat: 55.7558, lon: 37.6176 },
+    { name: "Japan", lat: 35.6895, lon: 139.6917 },
+    { name: "Germany", lat: 52.5200, lon: 13.4050 },
+    { name: "France", lat: 48.8566, lon: 2.3522 },
+    { name: "Italy", lat: 41.9028, lon: 12.4964 },
+    { name: "South Africa", lat: -25.746, lon: 28.1871 },
+    { name: "Mexico", lat: 19.4326, lon: -99.1332 },
+    { name: "South Korea", lat: 37.5665, lon: 126.978 },
+    { name: "Saudi Arabia", lat: 24.7136, lon: 46.6753 },
+    { name: "Turkey", lat: 41.0082, lon: 28.9784 }
 ];
+
 
 function init() {
     console.log("Initializing...");
@@ -217,7 +231,7 @@ async function showPointMenu(location) {
         api_token: apiToken,
         categories: 'general,politics',
         search: location.name,
-        limit: '5'
+        limit: '5'  
     };
 
     var esc = encodeURIComponent;
