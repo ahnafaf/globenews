@@ -94,7 +94,11 @@ function createTriangulationSphere() {
     scene.add(triangulationSphere);
 
     const markerGeometry = new THREE.SphereGeometry(0.01, 16, 16);
-    const markerMaterial = new THREE.MeshBasicMaterial({ color: 0xff0000 });
+    const markerMaterial = new THREE.MeshBasicMaterial({
+        color: 0xffffff,
+        transparent: true,
+        opacity: 0.7
+    });
 
     locations.forEach(loc => {
         const pos = latLonToVector3(loc.lat, loc.lon, 0.4);
@@ -103,8 +107,47 @@ function createTriangulationSphere() {
         marker.userData = loc;
         triangulationSphere.add(marker);
         markers.push(marker);
+
+        // Create and add label
+        const label = createLabel(loc.name);
+        label.position.copy(pos);
+        label.position.y += 0.01; // Adjust the position slightly above the marker
+
+        triangulationSphere.add(label);
     });
 }
+
+
+
+function createLabel(text) {
+    const canvas = document.createElement('canvas');
+    const context = canvas.getContext('2d');
+  
+    // Set the font style and size
+    context.font = 'Bold 20px Arial';
+  
+    // Set the text color and fill the text
+    context.fillStyle = 'rgba(255, 255, 255, 1.0)';
+    context.fillText(text, 0, 20);
+  
+    // Create a texture from the canvas
+    const texture = new THREE.CanvasTexture(canvas);
+  
+    // Set the texture to be transparent
+    texture.transparent = true;
+  
+    // Create a sprite material using the texture
+    const material = new THREE.SpriteMaterial({ map: texture });
+  
+    // Create a sprite using the material
+    const sprite = new THREE.Sprite(material);
+  
+    // Adjust the scale of the sprite to your preference
+    sprite.scale.set(0.1, 0.05, 1);
+  
+    return sprite;
+  }
+  
 
 function latLonToVector3(lat, lon, radius) {
     const phi = (90 - lat) * (Math.PI / 180);
@@ -189,7 +232,7 @@ function onClick(event) {
 
     if (intersects.length > 0) {
         const intersectedMarker = intersects[0].object;
-        const location = intersectedMarker.userData;
+        const location = intersectedMarker.userData;    
         showPointMenu(location);
     } else {
         hidePointMenu();
