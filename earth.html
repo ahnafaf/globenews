@@ -4,70 +4,35 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>3D Earth Model</title>
-    <style>
-        body { 
-            margin: 0; 
-            background-color: #f0f0f0;
-            font-family: Arial, sans-serif;
-        }
-        canvas { 
-            display: block; 
-        }
-        #info, #debugPanel {
-            position: absolute;
-            color: white;
-            background-color: rgba(0,0,0,0.7);
-            padding: 10px;
-            touch-action: none;
-            user-select: none;
-        }
-        #info {
-            top: 10px;
-            left: 10px;
-        }
-        #debugPanel {
-            top: 10px;
-            right: 10px;
-        }
-        #hover-info {
-            position: absolute;
-            color: black;
-            background-color: rgba(255, 255, 255, 0.7);
-            padding: 5px;
-            border-radius: 5px;
-            display: none;
-            pointer-events: none;
-        }
-        #point-menu {
-            position: fixed;
-            width: 300px;
-            background-color: rgba(255, 255, 255, 0.9);
-            border-radius: 10px;
-            padding: 15px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
-            display: none;
-            z-index: 1000;
-        }
-        #point-menu h3 {
-            margin-top: 0;
-        }
-        #point-menu p {
-            margin-bottom: 5px;
-        }
-        #point-menu a {
-            color: #0066cc;
-            text-decoration: none;
-        }
-        #point-menu a:hover {
-            text-decoration: underline;
-        }
-    </style>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <div id="info" class="draggable"></div>
     <div id="debugPanel" class="draggable"></div>
     <div id="hover-info"></div>
-    <div id="point-menu" style="display: none; position: absolute; background: white; padding: 10px; border: 1px solid black;"></div>
+    <div id="point-menu">
+        <h2>Point Menu</h2>
+        <h3>Subtitle or description</h3>
+        <h4>News</h4>
+        <div class="news-item">
+            <a href="#" class="news-link">News Item 1</a>
+            <p class="news-subtext">Brief description of the news item</p>
+            <p class="news-meta">Source • Time</p>
+        </div>
+    </div>
+
+    <div class="menu-container">
+        <div class="menu-indicator">
+            <span class="arrow">&#9654;</span>
+        </div>
+        <div class="logo">📰 GlobeNews</div>
+        <div class="menu-items">
+            <a href="#" class="menu-item">Explore</a>
+            <a href="#" class="menu-item">About</a>
+            <a href="#" class="menu-item">Contact</a>
+        </div>
+    </div>
+    
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/gsap.min.js"></script>

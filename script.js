@@ -94,7 +94,11 @@ function createTriangulationSphere() {
     scene.add(triangulationSphere);
 
     const markerGeometry = new THREE.SphereGeometry(0.01, 16, 16);
-    const markerMaterial = new THREE.MeshBasicMaterial({ color: 0xff0000 });
+    const markerMaterial = new THREE.MeshBasicMaterial({
+        color: 0xffffff,
+        transparent: true,
+        opacity: 0.7
+    });
 
     locations.forEach(loc => {
         const pos = latLonToVector3(loc.lat, loc.lon, 0.4);
@@ -103,8 +107,47 @@ function createTriangulationSphere() {
         marker.userData = loc;
         triangulationSphere.add(marker);
         markers.push(marker);
+
+        // Create and add label
+        const label = createLabel(loc.name);
+        label.position.copy(pos);
+        label.position.y += 0.01; // Adjust the position slightly above the marker
+
+        triangulationSphere.add(label);
     });
 }
+
+
+
+function createLabel(text) {
+    const canvas = document.createElement('canvas');
+    const context = canvas.getContext('2d');
+  
+    // Set the font style and size
+    context.font = 'Bold 20px Arial';
+  
+    // Set the text color and fill the text
+    context.fillStyle = 'rgba(255, 255, 255, 1.0)';
+    context.fillText(text, 0, 20);
+  
+    // Create a texture from the canvas
+    const texture = new THREE.CanvasTexture(canvas);
+  
+    // Set the texture to be transparent
+    texture.transparent = true;
+  
+    // Create a sprite material using the texture
+    const material = new THREE.SpriteMaterial({ map: texture });
+  
+    // Create a sprite using the material
+    const sprite = new THREE.Sprite(material);
+  
+    // Adjust the scale of the sprite to your preference
+    sprite.scale.set(0.1, 0.05, 1);
+  
+    return sprite;
+  }
+  
 
 function latLonToVector3(lat, lon, radius) {
     const phi = (90 - lat) * (Math.PI / 180);
@@ -189,7 +232,7 @@ function onClick(event) {
 
     if (intersects.length > 0) {
         const intersectedMarker = intersects[0].object;
-        const location = intersectedMarker.userData;
+        const location = intersectedMarker.userData;    
         showPointMenu(location);
     } else {
         hidePointMenu();
@@ -222,16 +265,20 @@ async function showPointMenu(location) {
         <p>Loading news...</p>
     `;
     menu.style.display = 'block';
-
+    positionMenu(event);
     var requestOptions = {
         method: 'GET'
     };
+
+    var today = new Date().toISOString().slice(0, 10); // Get today's date in YYYY-MM-DD format
 
     var params = {
         api_token: apiToken,
         categories: 'general,politics',
         search: location.name,
-        limit: '5'  
+        limit: '5',
+        language: 'en',
+        date: today
     };
 
     var esc = encodeURIComponent;
@@ -244,8 +291,8 @@ async function showPointMenu(location) {
         const response = await fetch("https://api.thenewsapi.com/v1/news/all?" + query, requestOptions);
         const newsData = await response.json();
 
-        // Generate news HTML
-        const newsHTML = newsData.data.map(article => `
+        // Generate news HTML for today's news
+        const newsHTML = newsData.data.filter(article => article.published_at.includes(today)).map(article => `
             <div class="news-item">
                 <a href="${article.url}" class="news-link" target="_blank">${article.title}</a>
                 <p class="news-subtext">${article.description || 'No description available.'}</p>
@@ -266,11 +313,45 @@ async function showPointMenu(location) {
     }
 }
 
+function positionMenu(event) {
+    const menu = document.getElementById('point-menu');
+    const x = event.clientX;
+    const y = event.clientY;
+    
+    // Calculate available space on the right and bottom
+    const rightSpace = window.innerWidth - x;
+    const bottomSpace = window.innerHeight - y;
+    
+    // Position the menu
+    if (rightSpace > 320) { // Menu width + padding
+        menu.style.left = `${x + 10}px`;
+    } else {
+        menu.style.left = `${x - 310}px`; // Menu width + padding
+    }
+    
+    if (bottomSpace > menu.offsetHeight) {
+        menu.style.top = `${y}px`;
+    } else {
+        menu.style.top = `${y - menu.offsetHeight}px`;
+    }
+}
+
+// Update the event listener to pass the event object
+document.addEventListener('click', function(event) {
+    // Assuming you have a way to determine if a country was clicked
+    if (clickedOnCountry) {
+        const location = getCountryInfo(); // Your function to get country info
+        showPointMenu(location, event);
+    } else {
+        hidePointMenu();
+    }
+});
 
 function hidePointMenu() {
     const menu = document.getElementById('point-menu');
     menu.style.display = 'none';
 }
+
 
 
 init();
