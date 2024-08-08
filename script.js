@@ -222,16 +222,20 @@ async function showPointMenu(location) {
         <p>Loading news...</p>
     `;
     menu.style.display = 'block';
-
+    positionMenu(event);
     var requestOptions = {
         method: 'GET'
     };
+
+    var today = new Date().toISOString().slice(0, 10); // Get today's date in YYYY-MM-DD format
 
     var params = {
         api_token: apiToken,
         categories: 'general,politics',
         search: location.name,
-        limit: '5'  
+        limit: '5',
+        language: 'en',
+        date: today
     };
 
     var esc = encodeURIComponent;
@@ -244,8 +248,8 @@ async function showPointMenu(location) {
         const response = await fetch("https://api.thenewsapi.com/v1/news/all?" + query, requestOptions);
         const newsData = await response.json();
 
-        // Generate news HTML
-        const newsHTML = newsData.data.map(article => `
+        // Generate news HTML for today's news
+        const newsHTML = newsData.data.filter(article => article.published_at.includes(today)).map(article => `
             <div class="news-item">
                 <a href="${article.url}" class="news-link" target="_blank">${article.title}</a>
                 <p class="news-subtext">${article.description || 'No description available.'}</p>
@@ -266,11 +270,45 @@ async function showPointMenu(location) {
     }
 }
 
+function positionMenu(event) {
+    const menu = document.getElementById('point-menu');
+    const x = event.clientX;
+    const y = event.clientY;
+    
+    // Calculate available space on the right and bottom
+    const rightSpace = window.innerWidth - x;
+    const bottomSpace = window.innerHeight - y;
+    
+    // Position the menu
+    if (rightSpace > 320) { // Menu width + padding
+        menu.style.left = `${x + 10}px`;
+    } else {
+        menu.style.left = `${x - 310}px`; // Menu width + padding
+    }
+    
+    if (bottomSpace > menu.offsetHeight) {
+        menu.style.top = `${y}px`;
+    } else {
+        menu.style.top = `${y - menu.offsetHeight}px`;
+    }
+}
+
+// Update the event listener to pass the event object
+document.addEventListener('click', function(event) {
+    // Assuming you have a way to determine if a country was clicked
+    if (clickedOnCountry) {
+        const location = getCountryInfo(); // Your function to get country info
+        showPointMenu(location, event);
+    } else {
+        hidePointMenu();
+    }
+});
 
 function hidePointMenu() {
     const menu = document.getElementById('point-menu');
     menu.style.display = 'none';
 }
+
 
 
 init();
