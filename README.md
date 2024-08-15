@@ -1,6 +1,6 @@
 # GlobeNews: Interactive 3D World News Explorer
 
-![GlobeNews Demo](path_to_your_demo.gif)
+![GlobeNews Demo](./images/functionalgif.gif)
 
 ## Overview
 
