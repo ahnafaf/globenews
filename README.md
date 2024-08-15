@@ -60,7 +60,7 @@ The 3D globe in our application is created using a process called triangulation.
 *Figure: Visualization of the sphere triangulation process*
 
 
-## How it works:
+**How it works:**
 Icosahedron Base: We start with an icosahedron, a 20-sided polyhedron, as our base shape.
 Subdivision: Each face of the icosahedron is subdivided into smaller triangles. This process is repeated several times to increase the resolution of our sphere.
 Spherification: The vertices of the resulting mesh are then projected onto the surface of a sphere, creating our globe shape.
