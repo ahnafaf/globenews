@@ -33,66 +33,94 @@ canvas {
 }
 #point-menu {
     position: fixed;
+    top: 0;
+    right: 0;
     width: 300px;
-    background: rgba(255, 255, 255, 0.1); /* More transparent */
-    backdrop-filter: blur(20px); /* Blurred background */
-    border-radius: 15px;
+    height: 100vh;
+    background: rgba(40, 44, 52, 0.85);
+    backdrop-filter: blur(10px);
     padding: 20px;
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    box-shadow: -4px 0 30px rgba(0, 0, 0, 0.2);
     display: none;
     z-index: 1000;
     transition: all 0.3s ease;
-    border: 1px solid rgba(167, 167, 167, 0.3);
+    border-left: 1px solid rgba(255, 255, 255, 0.1);
+    color: #e6e6e6;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: #61dafb rgba(40, 44, 52, 0.5);
+}
+
+#point-menu::-webkit-scrollbar {
+    width: 8px;
+}
+
+#point-menu::-webkit-scrollbar-track {
+    background: rgba(40, 44, 52, 0.5);
+}
+
+#point-menu::-webkit-scrollbar-thumb {
+    background-color: #61dafb;
+    border-radius: 4px;
 }
 
 #point-menu h2 {
     margin: 0 0 10px 0;
     font-size: 24px;
     font-weight: 600;
-    color: #e6e6e6;
+    color: #ffffff;
 }
 
 #point-menu h3 {
     margin: 0 0 15px 0;
     font-size: 18px;
     font-weight: 400;
-    color: #dddddd;
+    color: #b3b3b3;
 }
 
 #point-menu h4 {
     margin: 20px 0 10px 0;
     font-size: 16px;
     font-weight: 600;
-    color: #b6b6b6;
+    color: #054b9b;
+    text-transform: uppercase;
+    letter-spacing: 1px;
 }
 
 .news-item {
     margin-bottom: 15px;
     padding-bottom: 15px;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .news-link {
-    color: #007AFF;
+    color: #b0bbeb; /* A light blue color */
     text-decoration: none;
     font-size: 16px;
     font-weight: 500;
+    display: block;
+    margin-bottom: 5px;
+    transition: color 0.2s ease;
 }
 
 .news-link:hover {
+    color: #a8e6ff; /* A slightly lighter blue for hover state */
     text-decoration: underline;
 }
+
 
 .news-subtext {
     margin: 5px 0;
     font-size: 14px;
-    color: #d7d7d7;
+    color: #cccccc;
+    line-height: 1.4;
 }
 
 .news-meta {
     font-size: 12px;
-    color: #ffffff;
+    color: #888888;
+    margin-top: 5px;
 }
 
 #introScreen {
