@@ -56,7 +56,9 @@ function createGlobe(radius, detail) {
 ## Triangulation Process
 The 3D globe in our application is created using a process called triangulation. This method involves breaking down the sphere's surface into a network of triangles, which allows for efficient rendering and manipulation in 3D space.
 
-[Insert Triangulation Process Image Here]
+![Triangulation Process](./images/triangulation.png)
+*Figure: Visualization of the sphere triangulation process*
+
 
 ## How it works:
 Icosahedron Base: We start with an icosahedron, a 20-sided polyhedron, as our base shape.
