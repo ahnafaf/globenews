@@ -1,6 +1,6 @@
 
 # If you have specific file types for models and textures, you can also use:
-*.gltf
+
 *.glb
 *.obj
 *.fbx
