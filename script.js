@@ -9,7 +9,6 @@ let previousMousePosition = { x: 0, y: 0 };
 let markers = [];
 let lines;
 
-const apiToken = window.ENV.THENEWS_API_TOKEN;
 
 const locations = [
     { name: "United States", lat: 38.8951, lon: -77.0369, countryCode: 'US' },
