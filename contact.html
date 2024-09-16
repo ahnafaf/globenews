@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact GlobeNews</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            font-family: 'Roboto', Arial, sans-serif;
+            background-color: #121212;
+            color: #e0e0e0;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+        }
+
+        .contact-section {
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 40px;
+            background-color: #1e1e1e;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            border-radius: 15px;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            color: #61dafb;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .intro {
+            font-size: 1.2rem;
+            color: #b0b0b0;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        form {
+            margin-top: 30px;
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 20px;
+            background-color: #2c2c2c;
+            border: 1px solid #444;
+            border-radius: 5px;
+            font-size: 1rem;
+            color: #e0e0e0;
+        }
+
+        textarea {
+            height: 150px;
+        }
+
+        button {
+            display: block;
+            width: 200px;
+            margin: 0 auto;
+            padding: 12px;
+            background-color: #61dafb;
+            color: #121212;
+            border: none;
+            border-radius: 5px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #4fa8d5;
+        }
+
+        .contact-info {
+            margin-top: 40px;
+            text-align: center;
+            font-size: 1.1rem;
+            color: #b0b0b0;
+        }
+
+        .contact-info a {
+            color: #61dafb;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .contact-info a:hover {
+            color: #4fa8d5;
+        }
+
+        /* Override menu styles for dark theme */
+        .menu-container {
+            background-color: rgba(30, 30, 30, 0.9);
+        }
+
+        .logo {
+            color: #61dafb;
+        }
+
+        .menu-item {
+            color: #e0e0e0;
+        }
+
+        .menu-item:hover {
+            color: #61dafb;
+        }
+
+        .arrow {
+            color: #61dafb;
+        }
+    </style>
+</head>
+<body>  
+    <div class="contact-section">
+        <h1>Contact Us</h1>
+        <p class="intro">We'd love to hear from you! Whether you have questions, feedback, or just want to say hello, feel free to reach out.</p>
+
+        <form action="mailto:ahnaf.ahsan1123@gmail.com" method="POST" enctype="text/plain">
+            <input type="text" name="name" placeholder="Your Name" required>
+            <input type="email" name="email" placeholder="Your Email" required>
+            <textarea name="message" placeholder="Your Message" required></textarea>
+            <button type="submit">Send Message</button>
+        </form>
+
+        <div class="contact-info">
+            <p>Or reach us directly at:</p>
+            <p>
+                <strong>Email:</strong> <a href="mailto:ahnaf.ahsan1123@gmail.com">ahnaf.ahsan1123@gmail.com</a><br>
+            </p>
+        </div>
+    </div>
+
+    <div class="menu-container">
+        <div class="menu-indicator">
+            <span class="arrow">&#9654;</span>
+        </div>
+        <div class="logo">📰 GlobeNews</div>
+        <div class="menu-items">
+            <a href="./earth.html" class="menu-item">Explore</a>
+            <a href="./about.html" class="menu-item">About</a>
+            <a href="./contact.html" class="menu-item">Contact</a>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/gsap.min.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            gsap.to(".contact-section", { opacity: 1, y: 0, duration: 1, ease: "power3.out" });
+        });
+    </script>
+</body>
+</html>

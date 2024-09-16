@@ -2,12 +2,17 @@ const express = require('express');
 const path = require('path');
 const axios = require('axios');
 const xml2js = require('xml2js');
+const nodemailer = require('nodemailer');
+const bodyParser = require('body-parser');
 
 const app = express();
 const port = 3000;
 
 // Serve static files from the current directory
 app.use(express.static(__dirname));
+
+// Parse URL-encoded bodies (form submissions)
+app.use(bodyParser.urlencoded({ extended: true }));
 
 // Send index.html for the root route
 app.get('/', (req, res) => {
@@ -36,6 +41,35 @@ app.get('/news', async (req, res) => {
   } catch (error) {
     console.error('Error fetching news:', error);
     res.status(500).json({ error: 'Error fetching news' });
+  }
+});
+
+// Add an endpoint for sending emails
+app.post('/send-email', async (req, res) => {
+  const { name, email, message } = req.body;
+
+  // Create a transporter object using SMTP transport
+  const transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+      user: 'your-email@gmail.com',
+      pass: 'your-email-password',
+    },
+  });
+
+  const mailOptions = {
+    from: email,
+    to: 'muzammilmuhammad12@gmail.com', // Replace with your email address
+    subject: `Message from ${name}`,
+    text: message,
+  };
+
+  try {
+    await transporter.sendMail(mailOptions);
+    res.status(200).json({ success: true, message: 'Email sent successfully!' });
+  } catch (error) {
+    console.error('Error sending email:', error);
+    res.status(500).json({ success: false, message: 'Failed to send email' });
   }
 });
 
