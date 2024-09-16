@@ -15,7 +15,7 @@ const locations = [
     { name: "Canada", lat: 45.4215, lon: -75.6981, countryCode: 'CA' },
     { name: "United Arab Emirates", lat: 25.276987, lon: 55.296249, countryCode: 'AE' },
     { name: "Bangladesh", lat: 23.685, lon: 90.3563, countryCode: 'BD' },
-    { name: "Australia", lat: -35.3081, lon: 149.1245, count ryCode: 'AU' },
+    { name: "Australia", lat: -35.3081, lon: 149.1245, countryCode: 'AU' },
     { name: "United Kingdom", lat: 51.5074, lon: -0.1278, countryCode: 'GB' },
     { name: "China", lat: 39.9042, lon: 116.4074, countryCode: 'CN' },
     { name: "Brazil", lat: -15.8267, lon: -47.9218, countryCode: 'BR' },
