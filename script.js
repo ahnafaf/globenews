@@ -344,6 +344,7 @@ async function showPointMenu(location, event) {
     positionMenu(menu, event);
 
     try {
+        console.log("bro");
         // Construct the news URL using the country name
         const newsURL = `/news?country=${encodeURIComponent(location.name)}`;
 
@@ -352,6 +353,7 @@ async function showPointMenu(location, event) {
         const newsItems = await response.json();
 
         let newsHTML = "";
+        console.log("bro");
 
         for (let i = 0; i < Math.min(newsItems.length, 5); i++) {
             const item = newsItems[i];
@@ -363,6 +365,7 @@ async function showPointMenu(location, event) {
                 </div>
             `;
         }
+        console.log("bro2");
 
         // Update menu with fetched news
         menu.innerHTML = `
@@ -381,6 +384,7 @@ async function showPointMenu(location, event) {
                 link.style.textDecoration = 'none';
             });
         });
+        console.log("bro3");
     } catch (error) {
         console.error('Error fetching news:', error);
         menu.innerHTML += '<p>Error loading news. Please try again later.</p>';
