@@ -347,11 +347,12 @@ async function showPointMenu(location, event) {
         console.log("br");
         // Construct the news URL using the country name
         const newsURL = `/news?country=${encodeURIComponent(location.name)}`;
-
+        console.log("br1");
         // Fetch the news data
         const response = await fetch(newsURL);
+        console.log("br2");
         const newsItems = await response.json();
-
+        console.log("br3");
         let newsHTML = "";
         console.log("bro");
 
