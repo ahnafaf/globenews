@@ -344,7 +344,7 @@ async function showPointMenu(location, event) {
     positionMenu(menu, event);
 
     try {
-        console.log("bro");
+        console.log("br");
         // Construct the news URL using the country name
         const newsURL = `/news?country=${encodeURIComponent(location.name)}`;
 
