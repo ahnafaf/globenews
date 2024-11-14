@@ -350,6 +350,7 @@ async function showPointMenu(location, event) {
         console.log("br1");
         // Fetch the news data
         const response = await fetch(newsURL);
+        console.log(response);
         console.log("br2");
         const newsItems = await response.json();
         console.log("br3");
