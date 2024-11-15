@@ -8,6 +8,7 @@ const bodyParser = require('body-parser');
 const app = express();
 const port = 3000;
 
+
 // Middleware
 app.use(express.static(__dirname));
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -25,45 +26,49 @@ app.get('/news', async (req, res) => {
         return res.status(400).json({ error: 'Country parameter is required' });
     }
 
-    const url = `https://news.google.com/rss/search?q=${encodeURIComponent(country)}&hl=en-US&gl=US&ceid=US:en`;
-    
+    const twoWeeksAgo = new Date(Date.now() - 14 * 24 * 60 * 60 * 1000);
+    const publishedAfter = twoWeeksAgo.toISOString().split('.')[0]; // Format: YYYY-MM-DDTHH:mm:ss
+
     try {
-        const response = await axios.get(url);
-        const parser = new xml2js.Parser({ 
-            explicitArray: false, 
-            ignoreAttrs: true 
+        const response = await axios.get('https://api.thenewsapi.com/v1/news/top', {
+            params: {
+                api_token: 'FCii0ZOVyNjywKGTJPc8TUsAMf0QznKCxNZWTZTR',
+                search: country,
+                language: 'en',
+                limit: 3,
+                categories: 'politics',
+                sort: 'relevance_score',
+                published_after: publishedAfter
+            }
         });
-        
-        const result = await parser.parseStringPromise(response.data);
-        
-        // Handle cases where no items are found
-        if (!result.rss || !result.rss.channel || !result.rss.channel.item) {
-            return res.json([]);
-        }
 
-        // Ensure item is always an array
-        const items = Array.isArray(result.rss.channel.item) 
-            ? result.rss.channel.item 
-            : [result.rss.channel.item];
-
-        const newsItems = items.slice(0, 5).map(item => ({
+        // Transform the response to match your frontend expectations
+        const newsItems = response.data.data.map(item => ({
             title: item.title || 'No title',
-            link: item.link || '#',
+            link: item.url || '#',
             snippet: item.description || 'No description available',
             source: item.source || 'Unknown source',
-            pubDate: item.pubDate || 'No date available'
+            pubDate: item.published_at || 'No date available'
         }));
-        
-        res.setHeader('Content-Type', 'application/json');
+
         res.json(newsItems);
-        
+
     } catch (error) {
         console.error('Error fetching news:', error);
-        res.status(500).json({ 
+        res.status(500).json({
             error: 'Error fetching news',
-            message: error.message 
+            message: error.response?.data?.message || error.message
         });
     }
+});
+
+// Error handling middleware
+app.use((err, req, res, next) => {
+    console.error(err.stack);
+    res.status(500).json({
+        error: 'Something broke!',
+        message: err.message
+    });
 });
 
 // Email endpoint

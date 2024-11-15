@@ -344,56 +344,60 @@ async function showPointMenu(location, event) {
     positionMenu(menu, event);
 
     try {
-        console.log("br");
-        // Construct the news URL using the country name
-        const newsURL = `/news?country=${encodeURIComponent(location.name)}`;
-        console.log("br1");
-        // Fetch the news data
-        const response = await fetch(newsURL);
-        console.log(response);
-        console.log("br2");
+        // Fetch news from your backend endpoint
+        const response = await fetch(`/news?country=${encodeURIComponent(location.name)}`);
         const newsItems = await response.json();
-        console.log("br3");
-        let newsHTML = "";
-        console.log("bro");
 
-        for (let i = 0; i < Math.min(newsItems.length, 5); i++) {
-            const item = newsItems[i];
-            newsHTML += `
-                <div class="news-item">
-                    <a href="${item.link}" class="news-link" target="_blank" style="color: #61dafb; text-decoration: none; font-size: 16px; font-weight: 500; display: block; margin-bottom: 5px;">${item.title}</a>
-                    <p class="news-subtext">${item.snippet || 'No description available.'}</p>
-                    <p class="news-meta">Source: ${item.source}</p>
-                </div>
+        if (response.ok) {
+            let newsHTML = "";
+
+            if (newsItems.length === 0) {
+                newsHTML = '<p>No news available for this country at the moment.</p>';
+            } else {
+                newsHTML = newsItems.map(item => `
+                    <div class="news-item">
+                        <a href="${item.link}" class="news-link" target="_blank" 
+                           style="color: #61dafb; text-decoration: none; font-size: 16px; font-weight: 500; display: block; margin-bottom: 5px;">
+                            ${item.title}
+                        </a>
+                        <p class="news-subtext">${item.snippet}</p>
+                        <p class="news-meta">
+                            Source: ${item.source} | 
+                            Published: ${new Date(item.pubDate).toLocaleDateString()}
+                        </p>
+                    </div>
+                `).join('');
+            }
+
+            // Update menu with fetched news
+            menu.innerHTML = `
+                <h2>${location.name}</h2>
+                <h4>Latest News</h4>
+                ${newsHTML}
             `;
-        }
-        console.log("bro2");
 
-        // Update menu with fetched news
+            // Add event listeners for hover effect
+            const newsLinks = menu.querySelectorAll('.news-link');
+            newsLinks.forEach(link => {
+                link.addEventListener('mouseover', () => {
+                    link.style.textDecoration = 'underline';
+                });
+                link.addEventListener('mouseout', () => {
+                    link.style.textDecoration = 'none';
+                });
+            });
+        } else {
+            throw new Error('Failed to fetch news');
+        }
+    } catch (error) {
+        console.error('Error fetching news:', error);
         menu.innerHTML = `
             <h2>${location.name}</h2>
             <h4>Latest News</h4>
-            ${newsHTML || '<p>No news available for this country at the moment.</p>'}
+            <p>Error loading news. Please try again later.</p>
         `;
-
-        // Add event listeners for hover effect
-        const newsLinks = menu.querySelectorAll('.news-link');
-        newsLinks.forEach(link => {
-            link.addEventListener('mouseover', () => {
-                link.style.textDecoration = 'underline';
-            });
-            link.addEventListener('mouseout', () => {
-                link.style.textDecoration = 'none';
-            });
-        });
-        console.log("bro3");
-    } catch (error) {
-        console.error('Error fetching news:', error);
-        menu.innerHTML += '<p>Error loading news. Please try again later.</p>';
     }
 }
-
-
 
 function positionMenu(event) {
     const menu = document.getElementById('point-menu');
